@@ -3,5 +3,5 @@
 Just run: 
 
 ```
-cd ~ && git clone https://github.com/blbrodie/.dotfiles.git && cd .dotfiles && make && make install-emacs
+cd ~ && git clone https://github.com/blbrodie/.dotfiles.git && cd .dotfiles && make && make install
 ```
