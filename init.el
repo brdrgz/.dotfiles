@@ -6,6 +6,7 @@
 (require 'package)
 (add-to-list 'package-archives '("melpa" . "http://melpa.org/packages/"))
 (add-to-list 'package-archives '("melpa-stable" . "http://stable.melpa.org/packages/"))
+(add-to-list 'custom-theme-load-path (expand-file-name "~/.emacs.d/themes/"))
 (package-initialize)
 
 (unless (package-installed-p 'use-package)
@@ -46,60 +47,13 @@
 (use-package spaceline
   :ensure t
   :config
-  (setq powerline-default-separator 'contour)
-  (setq spaceline-highlight-face-func 'spaceline-highlight-face-evil-state)
-  (spaceline-spacemacs-theme))
-
-(use-package evil
-  :ensure t
-  :init
-  (setq evil-want-keybinding nil)
-  :config
-  (evil-mode 1)
-  (defalias #'forward-evil-WORD #'forward-evil-symbol))
-
-(use-package evil-collection
-  :after evil
-  :ensure t
-  :config
-  (evil-collection-init))
+  (setq powerline-default-separator 'contour))
 
 (use-package magit
-  :after (evil)
   :ensure t
   :bind ("C-x g" . magit-status)
   :config
   (global-magit-file-mode))
-
-(use-package evil-magit
-  :after (evil magit)
-  :ensure t)
-
-(use-package evil-surround
-  :ensure t
-  :after evil
-  :config
-  (global-evil-surround-mode 1))
-
-(use-package evil-snipe
-  :ensure t
-  :after evil
-  :hook
-  (magit-mode . turn-off-evil-snipe-override-mode)
-  :config
-  (evil-define-key '(visual normal motion operator) evil-snipe-local-mode-map
-    "s" 'nil
-    "S" 'nil
-    "f" 'nil
-    "F" 'nil
-    "t" 'nil
-    "T" 'nil
-    "f" 'evil-snipe-s
-    "F" 'evil-snipe-S
-    "t" 'evil-snipe-x
-    "T" 'evil-snipe-X)
-  (evil-snipe-mode 1)
-  (evil-snipe-override-mode 1))
 
 (use-package projectile
   :ensure t
@@ -144,8 +98,9 @@
   (("C-c r" . ivy-resume)
    ("C-c s" . counsel-rg)
    ("C-s"   . swiper))
-  :config
+  :init
   (ivy-mode 1)
+  :config
   (setq ivy-height 20)
   (setq ivy-use-virtual-buffers t)
   (setq ivy-count-format "(%d/%d) ")
@@ -159,7 +114,6 @@
   (setq counsel-rg-base-command "rg -S -M 512 --no-heading --line-number --color never %s .")
   (setq counsel-ag-base-command "ag -W 256 --nocolor --nogroup %s"))
 
-
 (use-package counsel
   :ensure t
   :after ivy
@@ -172,24 +126,20 @@
   (elixir-mode . (lambda ()
                    (setq column-enforce-column 80)
                    (column-enforce-mode))))
+(use-package evil
+  :ensure t
+  :init
+  (setq evil-want-keybinding nil)
+  :config
+  (evil-mode -1)
+  (global-set-key (kbd "<f4>") 'evil-mode)
+  (defalias #'forward-evil-WORD #'forward-evil-symbol))
 
 (use-package flyspell
   :ensure t
   :hook
   (text-mode . flyspell-mode)
   (html-mode . (lambda() (flyspell-mode -1))))
-
-(use-package ensime
-  :ensure t
-  :pin melpa-stable
-  :hook (java-mode . (lambda()
-		       (setq ensime-startup-notification nil)
-		       (ensime))))
-
-(use-package evil-org
-  :ensure t
-  :after evil
-  :hook (org-mode . evil-org-mode))
 
 (use-package flx-ido :ensure t)
   ;; (ido-mode 1)
@@ -198,6 +148,7 @@
   ;; (setq ido-enable-flex-matching t)
   ;; (setq ido-use-faces nil)
   ;; (setq ido-use-filename-at-point 'guess)
+
   ;; (setq ido-use-url-at-point t))
 
 (use-package string-inflection :ensure t)
@@ -224,8 +175,6 @@
 (setq js-indent-level 2)
 (add-to-list 'auto-mode-alist '("\\.js\\'" . rjsx-mode))
 
-(use-package rubocop :ensure t)
-
 (use-package column-enforce-mode
   :ensure t
   :init (setq column-enforce-mode-column 80)
@@ -238,17 +187,14 @@
 
 (use-package org-present
   :ensure t
-  :after evil
   :hook
   ((org-present-mode . (lambda ()
-			      (evil-mode 0)
 			      (hide-mode-line-mode 1)
 			      (org-present-big)
 			      (org-display-inline-images)
 			      (org-present-hide-cursor)
 			      (org-present-read-only)))
   (org-present-mode-quit . (lambda ()
-			     (evil-mode 1)
 			     (hide-mode-line-mode 0)
 			     (org-present-small)
 			     (org-remove-inline-images)
@@ -257,10 +203,11 @@
 
 (use-package yaml-mode :ensure t)
 
-(use-package zenburn-theme
+(use-package base16-theme
   :ensure t
-  :config (load-theme 'zenburn t))
-
+  :init (setq base16-theme-256-color-source "colors")
+  :config
+  (load-theme 'base16-irblack t))
 
 (use-package exec-path-from-shell
   :ensure t
@@ -277,6 +224,13 @@
 
 (use-package midnight)
 
+;; Enable nice rendering of diagnostics like compile errors.
+(use-package flycheck
+  :ensure t
+  :init (global-flycheck-mode))
+
+(use-package groovy-mode :ensure t)
+
 (use-package markdown-mode
   :ensure t
   :hook
@@ -284,6 +238,16 @@
   (markdown-mode . display-line-numbers-mode)
   (markdown-mode . (lambda() (setq-local fill-column 80)))
   (markdown-mode . company-mode))
+
+(use-package meghanada
+  :ensure t
+  :hook (java-mode . (lambda()
+            ;; meghanada-mode on
+            (meghanada-mode t)
+            ;; enable telemetry
+            (meghanada-telemetry-enable t)
+            (flycheck-mode +1)
+            (setq c-basic-offset 2))))
 
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (add-hook 'prog-mode-hook 'company-mode)
@@ -330,10 +294,8 @@
 (setq-default tab-width 2)
 
 ;; backups
-(setq backup-directory-alist
-      `((".*" . ,"~/.emacs.backups/")))
-(setq auto-save-file-name-transforms
-      `((".*" ,"~/.emacs.saves/" t)))
+(setq backup-directory-alist `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms `((".*" ,temporary-file-directory t)))
 
 (setq-default display-buffer-alist
               '(("*shell-?*" (display-buffer-reuse-window
@@ -363,7 +325,7 @@
     ("#CC9393" "#DFAF8F" "#F0DFAF" "#7F9F7F" "#BFEBBF" "#93E0E3" "#94BFF3" "#DC8CC3")))
  '(package-selected-packages
    (quote
-    (web-mode yari ctags-update spaceline wget evil-collection wgrep-ag use-package string-inflection json-mode evil-surround rg counsel-projectile evil-magit rjsx-mode js2-mode hide-mode-line org-present yaml-mode evil-org ivy-hydra hydra counsel ivy rubocop haskell-mode ws-butler markdown-mode alchemist ag ace-window zenburn-theme evil-snipe column-enforce-mode flx-ido company yasnippet yasnippet-snippets meghanada projectile flycheck exec-path-from-shell restclient erlang evil)))
+    (nord-theme web-mode yari ctags-update spaceline wget evil-collection wgrep-ag use-package string-inflection json-mode evil-surround rg counsel-projectile evil-magit rjsx-mode js2-mode hide-mode-line org-present yaml-mode evil-org ivy-hydra hydra counsel ivy rubocop haskell-mode ws-butler markdown-mode alchemist ag ace-window zenburn-theme evil-snipe column-enforce-mode flx-ido company yasnippet yasnippet-snippets meghanada projectile flycheck exec-path-from-shell restclient erlang evil)))
  '(pdf-view-midnight-colors (quote ("#DCDCCC" . "#383838")))
  '(safe-local-variable-values (quote ((column-enforce-column . 120))))
  '(tool-bar-mode nil)
@@ -394,4 +356,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:inherit default :stipple nil :background "#3F3F3F" :foreground "#DCDCCC" :inverse-video nil :box nil :strike-through nil :overline nil :underline nil :slant normal :weight normal :height 140 :width normal :foundry "nil" :family "Menlo")))))
+ )
