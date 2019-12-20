@@ -41,7 +41,7 @@
 
 (use-package company :ensure t)
 
-(use-package erlang :ensure t)
+(use-package erlang :defer t :ensure t)
 
 
 (use-package spaceline
