@@ -1,4 +1,3 @@
-export BASH_SILENCE_DEPRECATION_WARNING=1
 export PS1="\W\$ "
 export CLICOLOR=1
 
@@ -12,6 +11,9 @@ export TERMCAP=
 
 # build erlang with docs
 export KERL_BUILD_DOCS=yes
+
+# prevent erl_crash.dump from popping up in other projects
+export ERL_CRASH_DUMP=/tmp/erl_crash.dump
 
 # select java version
 export JAVA_HOME=$(/usr/libexec/java_home -v 12.0.2)
@@ -33,3 +35,6 @@ if type brew &>/dev/null; then
     done
   fi
 fi
+
+# Emacs shell
+export ESHELL=/usr/local/bin/bash

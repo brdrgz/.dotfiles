@@ -53,7 +53,8 @@
   :ensure t
   :bind ("C-x g" . magit-status)
   :config
-  (global-magit-file-mode))
+  (global-magit-file-mode)
+  (setq magit-save-repository-buffers 'dontask))
 
 (use-package projectile
   :ensure t
@@ -285,7 +286,8 @@
 (recentf-mode 1)
 
 ;; shell
-(setq shell-file-name "/bin/bash")
+(setq-default shell-file-name "/usr/local/bin/bash")
+(setq-default explicit-shell-file-name "/usr/local/bin/bash")
 (add-hook 'comint-mode-hook (lambda () (setq comint-process-echoes t)))
 
 ;; text formatting
