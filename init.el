@@ -166,6 +166,8 @@
   :ensure t
   :after wgrep)
 
+(use-package ripgrep :ensure t)
+
 (use-package json-mode
   :ensure t
   :hook (json-mode . (lambda()(setq js-indent-level 2))))
