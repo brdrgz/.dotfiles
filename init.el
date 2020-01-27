@@ -112,7 +112,7 @@
 	  (t . ivy--regex-fuzzy)))
   (setq projectile-completion-system 'ivy)
   (setq magit-completing-read-function 'ivy-completing-read)
-  (setq counsel-rg-base-command "rg -S -M 512 --no-heading --line-number --color never %s .")
+  (setq counsel-rg-base-command "rg -S -M 256 --no-heading --line-number --color never %s .")
   (setq counsel-ag-base-command "ag -W 256 --nocolor --nogroup %s"))
 
 (use-package counsel
@@ -242,15 +242,15 @@
   (markdown-mode . (lambda() (setq-local fill-column 80)))
   (markdown-mode . company-mode))
 
-(use-package meghanada
-  :ensure t
-  :hook (java-mode . (lambda()
-            ;; meghanada-mode on
-            (meghanada-mode t)
-            ;; enable telemetry
-            (meghanada-telemetry-enable t)
-            (flycheck-mode +1)
-            (setq c-basic-offset 2))))
+;; (use-package meghanada
+;;   :ensure t
+;;   :hook (java-mode . (lambda()
+;;             ;; meghanada-mode on
+;;            (meghanada-mode t)
+;;             ;; enable telemetry
+;;             ;; (meghanada-telemetry-enable t)
+;;             (flycheck-mode +1)
+;;             (setq c-basic-offset 2))))
 
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 (add-hook 'prog-mode-hook 'company-mode)
@@ -274,6 +274,8 @@
 ;;If this is nil, split-window-sensibly is not allowed to split a window vertically.
 (setq split-height-threshold nil)
 
+;;Do not split if window will be less than 200 columns wide
+(setq split-width-threshold 200)
 
 ;; tags
 (setq tags-add-tables nil)
