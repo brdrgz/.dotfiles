@@ -38,3 +38,5 @@ fi
 
 # Emacs shell
 export ESHELL=/usr/local/bin/bash
+
+export PATH="/usr/local/opt/curl-openssl/bin:$PATH"
