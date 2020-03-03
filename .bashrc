@@ -40,3 +40,4 @@ fi
 export ESHELL=/usr/local/bin/bash
 
 export PATH="/usr/local/opt/curl-openssl/bin:$PATH"
+export EDITOR=/usr/local/bin/nvim
