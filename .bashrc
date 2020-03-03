@@ -38,3 +38,5 @@ fi
 
 # Emacs shell
 export ESHELL=/usr/local/bin/bash
+
+export EDITOR=/usr/local/bin/nvim
